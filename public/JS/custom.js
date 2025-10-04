@@ -206,4 +206,69 @@ function initSmoothScroll() {
                 });
                 
                 // Close offcanvas menu if open
-                const
+                const offcanvasElement = document.getElementById('mobileMenu');
+                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                if (offcanvas) {
+                    offcanvas.hide();
+                }
+            }
+        });
+    });
+}
+
+// Simple Toast Notification
+function showToast(message) {
+    // Create toast element
+    const toastContainer = document.createElement('div');
+    toastContainer.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: var(--pink);
+        color: var(--brown);
+        padding: 12px 20px;
+        border-radius: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        font-size: 14px;
+        font-weight: 500;
+        animation: slideIn 0.3s ease-out;
+    `;
+    toastContainer.textContent = message;
+    
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(toastContainer);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+        toastContainer.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            document.body.removeChild(toastContainer);
+        }, 300);
+    }, 2000);
+}
