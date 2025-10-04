@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/costom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>
 <body>
     <!-- HEADER -->
@@ -218,6 +218,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Custom JS -->
-    <script src="{{ asset('js/costom.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 </html>
