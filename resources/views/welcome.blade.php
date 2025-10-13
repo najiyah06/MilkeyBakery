@@ -18,13 +18,10 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
                     <div class="logo-circle">
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 12a9 9 0 0118 0v1H3v-1z" stroke="#6b4f3b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M6 12c1-3 5-3 6-3s5 0 6 3" stroke="#6b4f3b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <img src="{{ asset('image/logo1.png') }}" alt="MilkeyBakery Logo" width="90" height="90" class="me-2">
                     </div>
                     <div>
-                        <h1 class="mb-0 fs-5 fw-semibold">Milkey<span class="text-blue">Bakery</span></h1>
+                        <h1 class="mb-0 fs-5 fw-semibold">MilkeyBakery</h1>
                         <p class="mb-0 small text-muted">Freshly Baked Happiness • Instagrammable</p>
                     </div>
                 </div>
@@ -89,7 +86,7 @@
                 <div class="col-md-6">
                     <div class="hero-card soft-card p-4">
                         <div class="hero-image-placeholder">
-                            <img src="{{ asset('image/ghibli.jpeg') }}" alt="Cake" height="180">
+                            <img src="{{ asset('image/ghibli.jpeg') }}" alt="Cake" height="200">
                         </div>
                         <p class="mt-3 small text-muted mb-0">Foto gaya flatlay, dengan props pastel dan tekstur kain—Instagram-ready.</p>
                     </div>
