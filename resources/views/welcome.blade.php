@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MilkeyBakery — Freshly Baked Happiness</title>
+    <link rel="icon" href="{{ asset('image/logo3.png') }}" type="image/png">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,7 +19,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
                     <div class="logo-circle">
-                        <img src="{{ asset('image/logo1.png') }}" alt="MilkeyBakery Logo" width="90" height="90" class="me-2">
+                        <img src="{{ asset('image/logo1.png') }}" alt="Logo" width="90" height="90" class="me-2">
                     </div>
                     <div>
                         <h1 class="mb-0 fs-5 fw-semibold">MilkeyBakery</h1>
@@ -86,7 +87,7 @@
                 <div class="col-md-6">
                     <div class="hero-card soft-card p-4">
                         <div class="hero-image-placeholder">
-                            <img src="{{ asset('image/ghibli.jpeg') }}" alt="Cake" height="200">
+                            <img src="{{ asset('image/ghibli.png') }}" alt="Cake" height="200">
                         </div>
                         <p class="mt-3 small text-muted mb-0">Foto gaya flatlay, dengan props pastel dan tekstur kain—Instagram-ready.</p>
                     </div>
