@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MilkeyBakery — Freshly Baked Happiness</title>
-    <link rel="icon" href="{{ asset('image/logo3.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('image/logo.png') }}" type="image/png">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,14 +17,8 @@
     <header class="py-3 fixed-top">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="logo-circle">
-                        <img src="{{ asset('image/logo1.png') }}" alt="Logo" width="90" height="90" class="me-2">
-                    </div>
-                    <div>
-                        <h1 class="mb-0 fs-5 fw-semibold">MilkeyBakery</h1>
-                        <p class="mb-0 small text-muted">Freshly Baked Happiness • Instagrammable</p>
-                    </div>
+                <div class="navbar-logo">
+                    <img src="{{ asset('image/logopanjang.png') }}" alt="MilkeyBakery Logo" class="logo-img">
                 </div>
                 <nav class="d-none d-md-flex gap-4 align-items-center">
                     <a href="#menu" class="nav-link">Menu</a>

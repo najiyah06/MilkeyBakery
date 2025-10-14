@@ -12,7 +12,7 @@ body {
     background-color: var(--cream);
     color: var(--brown);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    padding-top: 50px;
+    padding-top: 120px; 
 }
 
 /* Soft Card Effect */
@@ -26,17 +26,12 @@ body {
 header {
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(8px);
+    padding: 0.3rem 0; /* dikurangi dari py-3 bawaan Bootstrap */
 }
 
-.logo-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 0; 
-    background: none; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: none; 
+.navbar-logo img.logo-img {
+    height: 60px; /* kecilin logo, sesuaikan biar proporsional */
+    width: auto;
 }
 
 .text-pink {
@@ -54,6 +49,17 @@ header {
 .nav-link:hover {
     text-decoration: underline;
     color: var(--brown);
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* Cart Button */
