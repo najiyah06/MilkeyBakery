@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MilkeyBakery — Freshly Baked Happiness</title>
-    <link rel="icon" href="{{ asset('image/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="images/png">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="navbar-logo">
-                    <img src="{{ asset('image/logopanjang.png') }}" alt="MilkeyBakery Logo" class="logo-img">
+                    <img src="{{ asset('images/logopanjang.png') }}" alt="MilkeyBakery Logo" class="logo-img">
                 </div>
                 <nav class="d-none d-md-flex gap-4 align-items-center">
                     <a href="#menu" class="nav-link">Menu</a>
@@ -58,6 +58,19 @@
                 <a href="#offers" class="nav-link">Offers</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
+                <button id="cartBtn" class="btn btn-cart position-relative">
+                        Cart <span id="cartCount" class="badge">0</span>
+                    </button>
+                    @auth
+                        <span class="text-muted">Hi, {{ Auth::user()->name }}</span>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
+                        <a href="{{ route('register') }}" class="btn btn-pink btn-sm">Register</a>
+                    @endauth
             </nav>
         </div>
     </div>
@@ -73,17 +86,13 @@
                         <a href="#menu" class="btn btn-primary-custom">Order Now</a>
                         <a href="#offers" class="btn btn-outline-secondary">Lihat Promo</a>
                     </div>
-                    <div class="mt-4 d-flex gap-3 small text-muted flex-wrap">
-                        <span>🥐 Best Seller: Milk Loaf</span>
-                        <span>☕ Pasangan: Iced Latte</span>
-                    </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="hero-card soft-card p-4">
+                    <div class="hero-card p-4">
                         <div class="hero-image-placeholder">
-                            <img src="{{ asset('image/ghibli.png') }}" alt="Cake" height="200">
+                            <img src="{{ asset('images/stroberi.png') }}" alt="Cake" height="300">
                         </div>
-                        <p class="mt-3 small text-muted mb-0">Foto gaya flatlay, dengan props pastel dan tekstur kain—Instagram-ready.</p>
+                        <p class="mt-5 small text-muted mb-0">Kue Ghibli biru pastel dengan bunga pink dan karakter lucu yang super menggemaskan.</p>
                     </div>
                 </div>
             </div>
