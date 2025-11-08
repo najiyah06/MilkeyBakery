@@ -1,172 +1,124 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MilkeyBakery — Freshly Baked Happiness</title>
+    <title>MilkeyBakery</title>
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="images/png">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="py-3 fixed-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="navbar-logo">
-                    <img src="{{ asset('images/logopanjang.png') }}" alt="MilkeyBakery Logo" class="logo-img">
-                </div>
-                <nav class="d-none d-md-flex gap-4 align-items-center">
-                    <a href="#menu" class="nav-link">Menu</a>
-                    <a href="#offers" class="nav-link">Offers</a>
-                    <a href="#about" class="nav-link">About</a>
-                    <a href="#contact" class="nav-link">Contact</a>
-                    <button id="cartBtn" class="btn btn-cart position-relative">
-                        Cart <span id="cartCount" class="badge">0</span>
-                    </button>
-                    @auth
-                        <span class="text-muted">Hi, {{ Auth::user()->name }}</span>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-                        <a href="{{ route('register') }}" class="btn btn-pink btn-sm">Register</a>
-                    @endauth
-                </nav>
-                <button class="btn d-md-none" id="mobileToggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-                    ☰
-                </button>
+            <a class="navbar-brand" href="#">
+                <span class="brand-name">MilkeyBakery</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        @auth
+                            <span class="text-muted me-2">Hi, {{ Auth::user()->name }}</span>
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm me-2">Login</a>
+                            <a href="{{ route('register') }}" class="btn btn-pink btn-sm">Register</a>
+                        @endauth
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Mobile Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <nav class="d-flex flex-column gap-3">
-                <a href="#menu" class="nav-link">Menu</a>
-                <a href="#offers" class="nav-link">Offers</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <button id="cartBtn" class="btn btn-cart position-relative">
-                        Cart <span id="cartCount" class="badge">0</span>
-                    </button>
-                    @auth
-                        <span class="text-muted">Hi, {{ Auth::user()->name }}</span>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-                        <a href="{{ route('register') }}" class="btn btn-pink btn-sm">Register</a>
-                    @endauth
-            </nav>
-        </div>
-    </div>
-
-    <!-- HERO SECTION -->
-    <section class="hero-section py-5">
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
         <div class="container">
-            <div class="row align-items-center g-4">
-                <div class="col-md-6">
-                    <h2 class="display-4 fw-bold lh-sm">Freshly Baked <span class="text-pink">Happiness</span></h2>
-                    <p class="mt-3 text-muted">MilkeyBakery menyajikan roti dan pastry lezat dengan sentuhan aesthetic—cocok buat hangout, foto, dan ngilangin kerinduan ngemil.</p>
-                    <div class="mt-4 d-flex gap-3">
-                        <a href="#menu" class="btn btn-primary-custom">Order Now</a>
-                        <a href="#offers" class="btn btn-outline-secondary">Lihat Promo</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="hero-card p-4">
-                        <div class="hero-image-placeholder">
-                            <img src="{{ asset('images/stroberi.png') }}" alt="Cake" height="300">
-                        </div>
-                        <p class="mt-5 small text-muted mb-0">Kue Ghibli biru pastel dengan bunga pink dan karakter lucu yang super menggemaskan.</p>
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">Freshly Baked Daily</h1>
+                    <p class="hero-subtitle">Handcrafted with love, baked to perfection</p>
+                    <div class="hero-buttons">
+                        <a href="#products" class="btn btn-pink btn-lg me-3">Shop Now</a>
+                        <a href="#about" class="btn btn-outline-light btn-lg">Learn More</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MENU SECTION -->
-    <section id="menu" class="py-5">
+    <!-- About Section -->
+    <section id="about" class="about-section py-5">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fs-2 fw-semibold mb-0">Our Menu</h3>
-                <p class="mb-0 small text-muted d-none d-md-block">Pilihan roti, kue & pastry — klik untuk tambah ke cart</p>
-            </div>
-            <div class="row g-4" id="productGrid">
-                <!-- Products will be inserted here by JavaScript -->
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800" alt="Bakery" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="section-title">Our Story</h2>
+                    <p class="text-muted">At MilkeyBakery, we believe in the art of traditional baking. Every morning, our skilled bakers craft fresh bread, pastries, and cakes using only the finest ingredients.</p>
+                    <p class="text-muted">From our family to yours, we're committed to bringing warmth and joy through every bite. Our recipes have been perfected over generations, creating that perfect balance of flavor and texture.</p>
+                    <a href="#products" class="btn btn-pink mt-3">Explore Our Products</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- OFFERS SECTION -->
-    <section id="offers" class="py-5">
+    <!-- Products Section -->
+    <section id="products" class="products-section py-5 bg-light">
         <div class="container">
-            <h3 class="fs-2 fw-semibold mb-4">Special Offers</h3>
+            <h2 class="section-title text-center mb-5">Our Specialties</h2>
             <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="soft-card p-4">
-                        <h4 class="fw-semibold">Bundle Hemat: Milk Loaf + 2 Croissant</h4>
-                        <p class="small text-muted mt-2 mb-0">Diskon 20% setiap Jumat — paket cocok untuk ngumpul.</p>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500" alt="Artisan Bread">
+                        </div>
+                        <div class="product-info">
+                            <h3>Artisan Bread</h3>
+                            <p>Freshly baked sourdough, baguettes, and whole grain loaves</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="soft-card p-4">
-                        <h4 class="fw-semibold">Promo Pelajar</h4>
-                        <p class="small text-muted mt-2 mb-0">Tunjukkan kartu pelajar, dapatkan minuman 50% off.</p>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=500" alt="Pastries">
+                        </div>
+                        <div class="product-info">
+                            <h3>Pastries</h3>
+                            <p>Flaky croissants, danish, and sweet morning treats</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TESTIMONIALS SECTION -->
-    <section class="py-5">
-        <div class="container">
-            <h3 class="fs-2 fw-semibold mb-4">Testimonials</h3>
-            <div class="card testimonial-card">
-                <div class="card-body text-center p-4">
-                    <p id="testText" class="fst-italic text-muted mb-3">"Roti enak dan vibesnya aesthetic banget!"</p>
-                    <p class="fw-medium mb-0">— Nisa, 21</p>
-                    <div class="mt-4 d-flex justify-content-center gap-3">
-                        <button id="prevTest" class="btn btn-sm btn-outline-secondary rounded-pill">‹</button>
-                        <button id="nextTest" class="btn btn-sm btn-outline-secondary rounded-pill">›</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section id="about" class="py-5">
-        <div class="container">
-            <h3 class="fs-2 fw-semibold mb-4">About Us</h3>
-            <div class="row g-4 align-items-center">
-                <div class="col-md-6">
-                    <p>MilkeyBakery didirikan dari kecintaan pada roti lembut dan suasana cozy. Kami percaya roti bisa membuat hari lebih manis—dan foto lebih aesthetic.</p>
-                    <ul class="list-unstyled mt-4 small text-muted">
-                        <li>• Bahan berkualitas</li>
-                        <li>• Resep homemade</li>
-                        <li>• Packaging ramah lingkungan</li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <div class="soft-card p-3">
-                        <div class="about-image-placeholder">
-                            <span>[Foto Cozy Bakery]</span>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500" alt="Cakes">
+                        </div>
+                        <div class="product-info">
+                            <h3>Custom Cakes</h3>
+                            <p>Beautiful cakes for every special occasion</p>
                         </div>
                     </div>
                 </div>
@@ -174,61 +126,68 @@
         </div>
     </section>
 
-    <!-- CONTACT SECTION -->
-    <section id="contact" class="py-5">
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section py-5">
         <div class="container">
-            <h3 class="fs-2 fw-semibold mb-4">Contact & Location</h3>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="soft-card p-4">
-                        <p class="small mb-4">Alamat: Jl. Contoh No.1 — Kota</p>
-                        <div class="d-flex gap-3">
-                            <a href="https://wa.me/628123456789" target="_blank" class="btn btn-pink">WhatsApp</a>
-                            <a href="https://instagram.com/yourbakery" target="_blank" class="btn btn-outline-secondary">Instagram</a>
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="section-title">Visit Us</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h5>Address</h5>
+                                <p>Jl. Raya Bakery No. 123, Surabaya</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h5>Phone</h5>
+                                <p>(031) 1234-5678</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h5>Hours</h5>
+                                <p>Mon-Sat: 7AM - 8PM<br>Sunday: 8AM - 6PM</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="soft-card p-3">
-                        <div class="map-placeholder">
-                            <span>[Map]</span>
+                <div class="col-lg-6">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <form class="contact-form">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Your Name">
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your Email">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="4" placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-pink">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CART MODAL -->
-    <div class="modal fade" id="cartModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Your Cart</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="cartItems">
-                        <p class="small text-muted">Belum ada item.</p>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <div class="fw-semibold">Total: <span id="cartTotal">Rp 0</span></div>
-                    <button id="checkout" class="btn btn-blue">Checkout</button>
-                </div>
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container text-center">
+            <p class="mb-2">&copy; 2024 MilkeyBakery. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="text-center py-4">
-        <p class="small text-muted mb-0">© MilkeyBakery • Made with pastel vibes</p>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 </html>

@@ -1,274 +1,92 @@
-// Product Data
-const products = [
-    {id: 1, name: 'Milk Loaf', price: 18000, desc: 'Roti lembut susu khas Milkey'},
-    {id: 2, name: 'Butter Croissant', price: 12000, desc: 'Lapisan renyah buttery'},
-    {id: 3, name: 'Matcha Cake', price: 25000, desc: 'Cake matcha lembut'},
-    {id: 4, name: 'Chocolate Danish', price: 15000, desc: 'Manis & flaky'},
-    {id: 5, name: 'Bagel', price: 10000, desc: 'Padat & chewy'},
-    {id: 6, name: 'Almond Tart', price: 22000, desc: 'Topping almond panggang'},
-];
-
-// Cart Array
-let cart = [];
-
-// Initialize App
-document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    initCartModal();
-    initTestimonials();
-    initSmoothScroll();
+// Navbar scroll effect
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
 });
 
-// Render Product Cards
-function renderProducts() {
-    const grid = document.getElementById('productGrid');
-    
-    products.forEach(product => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-6 col-lg-4';
-        
-        col.innerHTML = `
-            <div class="product-card">
-                <div class="product-image">[Gambar]</div>
-                <h4>${product.name}</h4>
-                <p class="desc">${product.desc}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="fw-semibold">Rp ${product.price.toLocaleString('id-ID')}</div>
-                    <button class="btn btn-add" data-id="${product.id}">Tambah</button>
-                </div>
-            </div>
-        `;
-        
-        grid.appendChild(col);
-    });
-    
-    // Add event listeners to all "Tambah" buttons
-    document.querySelectorAll('.btn-add').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = parseInt(this.getAttribute('data-id'));
-            addToCart(productId);
-        });
-    });
-}
-
-// Add to Cart Function
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    
-    if (product) {
-        const existingItem = cart.find(item => item.id === productId);
-        
-        if (existingItem) {
-            existingItem.qty++;
-        } else {
-            cart.push({...product, qty: 1});
-        }
-        
-        updateCartUI();
-        
-        // Show feedback
-        showToast('Item ditambahkan ke cart!');
-    }
-}
-
-// Update Cart UI
-function updateCartUI() {
-    // Update cart count badge
-    document.getElementById('cartCount').textContent = cart.length;
-    
-    // Update cart items in modal
-    const container = document.getElementById('cartItems');
-    container.innerHTML = '';
-    
-    if (cart.length === 0) {
-        container.innerHTML = '<p class="small text-muted">Belum ada item.</p>';
-        document.getElementById('cartTotal').textContent = 'Rp 0';
-        return;
-    }
-    
-    let total = 0;
-    
-    cart.forEach((item, index) => {
-        total += item.price * item.qty;
-        
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-            <div>
-                <div class="fw-medium">${item.name}</div>
-                <div class="small text-muted">Rp ${item.price.toLocaleString('id-ID')}</div>
-            </div>
-            <div class="cart-item-controls">
-                <button class="dec-btn" data-index="${index}">-</button>
-                <div class="fw-medium">${item.qty}</div>
-                <button class="inc-btn" data-index="${index}">+</button>
-            </div>
-        `;
-        
-        container.appendChild(cartItem);
-    });
-    
-    // Update total
-    document.getElementById('cartTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
-    
-    // Add event listeners for increment/decrement buttons
-    container.querySelectorAll('.inc-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const index = parseInt(this.getAttribute('data-index'));
-            cart[index].qty++;
-            updateCartUI();
-        });
-    });
-    
-    container.querySelectorAll('.dec-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const index = parseInt(this.getAttribute('data-index'));
-            cart[index].qty--;
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            const offsetTop = target.offsetTop - 80;
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
             
-            if (cart[index].qty <= 0) {
-                cart.splice(index, 1);
-            }
-            
-            updateCartUI();
-        });
-    });
-}
-
-// Initialize Cart Modal
-function initCartModal() {
-    const cartBtn = document.getElementById('cartBtn');
-    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-    
-    cartBtn.addEventListener('click', function() {
-        updateCartUI();
-        cartModal.show();
-    });
-    
-    // Checkout button
-    document.getElementById('checkout').addEventListener('click', function() {
-        const total = document.getElementById('cartTotal').textContent;
-        alert(`Checkout belum terintegrasi. Total: ${total}`);
-    });
-}
-
-// Testimonials
-const testimonials = [
-    {text: 'Roti enak dan vibesnya aesthetic banget!', author: 'Nisa, 21'},
-    {text: 'Packagingnya cute, rasanya legit!', author: 'Dimas, 19'},
-    {text: 'Suka banget—cocok buat foto feed.', author: 'Ayu, 23'},
-    {text: 'Pelayanan ramah dan delivery cepat.', author: 'Rizki, 25'}
-];
-
-let currentTestimonial = 0;
-
-function initTestimonials() {
-    showTestimonial();
-    
-    document.getElementById('nextTest').addEventListener('click', function() {
-        currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-        showTestimonial();
-    });
-    
-    document.getElementById('prevTest').addEventListener('click', function() {
-        currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
-        showTestimonial();
-    });
-}
-
-function showTestimonial() {
-    const testimonial = testimonials[currentTestimonial];
-    document.getElementById('testText').textContent = `"${testimonial.text}"`;
-    
-    // Update author if element exists
-    const authorElement = document.querySelector('.testimonial-card .fw-medium');
-    if (authorElement) {
-        authorElement.textContent = `— ${testimonial.author}`;
-    }
-}
-
-// Smooth Scroll for Navigation Links
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            
-            if (targetId !== '#' && document.querySelector(targetId)) {
-                e.preventDefault();
-                
-                const target = document.querySelector(targetId);
-                const headerOffset = 80;
-                const elementPosition = target.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // Close offcanvas menu if open
-                const offcanvasElement = document.getElementById('mobileMenu');
-                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-                if (offcanvas) {
-                    offcanvas.hide();
-                }
-            }
-        });
-    });
-}
-
-// Simple Toast Notification
-function showToast(message) {
-    // Create toast element
-    const toastContainer = document.createElement('div');
-    toastContainer.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: var(--pink);
-        color: var(--brown);
-        padding: 12px 20px;
-        border-radius: 25px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 9999;
-        font-size: 14px;
-        font-weight: 500;
-        animation: slideIn 0.3s ease-out;
-    `;
-    toastContainer.textContent = message;
-    
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+            // Close mobile menu if open
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            if (navbarCollapse.classList.contains('show')) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                bsCollapse.hide();
             }
         }
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
+    });
+});
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
         }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(toastContainer);
-    
-    // Remove after 2 seconds
-    setTimeout(() => {
-        toastContainer.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => {
-            document.body.removeChild(toastContainer);
-        }, 300);
-    }, 2000);
+    });
+}, observerOptions);
+
+// Observe product cards
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+        observer.observe(card);
+    });
+});
+
+// Contact form submission handler
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+        
+        // Here you can add AJAX request to send form data
+        // For now, just show success message
+        alert('Thank you for your message! We will get back to you soon.');
+        this.reset();
+    });
 }
+
+// Add active state to current navigation item
+const currentLocation = window.location.hash;
+if (currentLocation) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === currentLocation) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Parallax effect for hero section
+window.addEventListener('scroll', function() {
+    const heroSection = document.querySelector('.hero-section');
+    const scrolled = window.pageYOffset;
+    if (heroSection) {
+        heroSection.style.backgroundPositionY = scrolled * 0.5 + 'px';
+    }
+});
