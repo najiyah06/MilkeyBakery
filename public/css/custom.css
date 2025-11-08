@@ -126,7 +126,7 @@ body {
     transition: all 0.3s ease;
 }
 
-. -outline-light:hover {
+.btn-outline-light:hover {
     background-color: white;
     color: #EBCB90;
 }
