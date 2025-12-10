@@ -76,8 +76,8 @@
                 </div>
                 <div class="col-lg-6">
                     <h2 class="section-title">Our Story</h2>
-                    <p class="text-muted">At MilkeyBakery, we believe in the art of traditional baking. Every morning, our skilled bakers craft fresh bread, pastries, and cakes using only the finest ingredients.</p>
-                    <p class="text-muted">From our family to yours, we're committed to bringing warmth and joy through every bite. Our recipes have been perfected over generations, creating that perfect balance of flavor and texture.</p>
+                    <p class="text-muted">Di MilkeyBakery, menjunjung tinggi seni memanggang tradisional. Setiap pagi, pembuat roti terampil kami menggunakan bahan-bahan terbaik untuk meracik roti, kue kering, dan kue. Kami menjamin Anda menerima produk dengan kualitas dan kesegaran premium.</p>
+                    <p class="text-muted">Resep kami adalah peninggalan keluarga yang telah disempurnakan turun-temurun, menciptakan keseimbangan rasa dan tekstur yang sempurna. Kami berdedikasi untuk menghadirkan kehangatan dan kebahagiaan terbaik dari keluarga kami di setiap sajian untuk Anda.</p>
                     <a href="#products" class="btn btn-pink mt-3">Explore Our Products</a>
                 </div>
             </div>

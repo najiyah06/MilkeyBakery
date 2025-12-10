@@ -1,117 +1,122 @@
 :root {
-    --pink: #ffd6e0;
+    --brown-dark: #5a3924;
+    --brown: #8a5b3a;
+    --brown-light: #caa98a;
     --cream: #fff7ef;
-    --blue: #bfeaf5;
-    --yellow: #ffdfa6;
-    --brown: #6b4f3b;
+    --white: #ffffff;
 }
 
-/* Background Umum */
+/* Background halaman */
 body {
-    background-color: var(--cream);
-    color: var(--brown);
+    background: linear-gradient(180deg, #f7ece2, #f0dfd0, #e9d4c3);
     font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    color: var(--brown-dark);
 }
 
-/* Container */
-.register-container {
-    text-align: center;
-}
-
-/* Header */
-.register-header {
-    margin-bottom: 20px;
-}
-
-.logo-img {
-    height: 80px;
-    width: auto;
-}
-
-.register-title {
-    color: var(--brown);
-    font-weight: 600;
-    font-size: 1.5rem;
-    margin-top: 10px;
+/* Wrapper */
+.register-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
 }
 
 /* Card */
 .register-card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
-    backdrop-filter: blur(8px);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    box-shadow: 0 4px 12px rgba(107, 79, 59, 0.15);
+    background: var(--white);
+    padding: 2.2rem;
+    border-radius: 1.3rem;
+    box-shadow: 0px 8px 20px rgba(90, 57, 36, 0.15);
+    border: 1px solid rgba(90, 57, 36, 0.1);
+}
+
+/* Header */
+.register-header {
+    text-align: center;
+    margin-bottom: 1.4rem;
+}
+
+.logo-img {
+    height: 90px;
+    margin-bottom: 10px;
+}
+
+.register-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--brown-dark);
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+/* Label */
+.label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--brown);
 }
 
 /* Input */
 .input {
     width: 100%;
-    margin-top: 6px;
-    border-radius: 50px;
-    border: 1px solid #ccc;
-    padding: 10px 15px;
-    transition: all 0.3s ease;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1.8px solid var(--brown-light);
+    background-color: #fffaf6;
+    transition: all 0.25s ease;
 }
 
 .input:focus {
-    border-color: var(--pink);
-    box-shadow: 0 0 6px rgba(255, 182, 193, 0.6);
+    border-color: var(--brown);
+    box-shadow: 0 0 8px rgba(138, 91, 58, 0.3);
 }
 
-/* Label & Error */
-.label {
-    text-align: left;
-    display: block;
-    font-weight: 500;
-    color: var(--brown);
-}
-
+/* Error */
 .error {
-    font-size: 0.85rem;
-    color: red;
-    text-align: left;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    color: #c0392b;
 }
 
 /* Footer */
 .form-footer {
+    margin-top: 1.6rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1.5rem;
 }
 
-/* Tombol Daftar */
-.btn-register {
-    background-color: var(--pink);
-    color: var(--brown);
-    border: none;
-    border-radius: 50px;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.btn-register:hover {
-    background-color: var(--blue);
-    transform: translateY(-2px);
-}
-
-/* Link ke Login */
+/* Link Login */
 .login-link {
-    color: var(--brown);
+    color: var(--brown-dark);
     text-decoration: underline;
-    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .login-link:hover {
-    color: var(--blue);
+    color: var(--brown);
+}
+
+/* Tombol Register */
+.btn-register {
+    background-color: var(--brown);
+    color: white;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-register:hover {
+    background-color: var(--brown-dark);
+    transform: translateY(-2px);
 }
