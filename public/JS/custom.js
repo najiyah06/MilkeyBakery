@@ -90,3 +90,14 @@ window.addEventListener('scroll', function() {
         heroSection.style.backgroundPositionY = scrolled * 0.5 + 'px';
     }
 });
+
+// Product horizontal scroll
+function scrollProduct(direction) {
+    const container = document.getElementById("productScroll");
+    if (!container) return;
+
+    container.scrollBy({
+        left: direction * 300,
+        behavior: "smooth"
+    });
+}
