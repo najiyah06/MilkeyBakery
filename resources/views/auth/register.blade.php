@@ -1,6 +1,11 @@
-<x-guest-layout>
-
-<link rel="stylesheet" href="{{ asset('css/register.css') }}">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - MilkeyBakery</title>
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+</head>
+<body>
 
 <div class="register-wrapper">
     <div class="register-card">
@@ -14,30 +19,29 @@
             @csrf
 
             <div class="form-group">
-                <x-input-label for="name" value="Nama" class="label" />
-                <x-text-input id="name" class="input" type="text" name="name"
-                    :value="old('name')" required autofocus />
-                <x-input-error :messages="$errors->get('name')" class="error" />
+                <label class="label">Nama</label>
+                <input type="text" name="name" class="input"
+                    value="{{ old('name') }}" required autofocus>
+                @error('name') <div class="error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <x-input-label for="email" value="Email" class="label" />
-                <x-text-input id="email" class="input" type="email" name="email"
-                    :value="old('email')" required />
-                <x-input-error :messages="$errors->get('email')" class="error" />
+                <label class="label">Email</label>
+                <input type="email" name="email" class="input"
+                    value="{{ old('email') }}" required>
+                @error('email') <div class="error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <x-input-label for="password" value="Password" class="label" />
-                <x-text-input id="password" class="input" type="password"
-                    name="password" required />
-                <x-input-error :messages="$errors->get('password')" class="error" />
+                <label class="label">Password</label>
+                <input type="password" name="password" class="input" required>
+                @error('password') <div class="error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <x-input-label for="password_confirmation" value="Konfirmasi Password" class="label" />
-                <x-text-input id="password_confirmation" class="input" type="password"
-                    name="password_confirmation" required />
+                <label class="label">Konfirmasi Password</label>
+                <input type="password" name="password_confirmation" class="input" required>
+                @error('password_confirmation') <div class="error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-footer">
@@ -46,7 +50,9 @@
             </div>
 
         </form>
+
     </div>
 </div>
 
-</x-guest-layout>
+</body>
+</html>

@@ -13,7 +13,7 @@
                     <p class="hero-subtitle">Handcrafted with love, baked to perfection</p>
                     <div class="hero-buttons">
                         <a href="#products" class="btn btn-pink btn-lg me-3">Shop Now</a>
-                        <a href="#about" class="btn btn-outline-light btn-lg">Learn More</a>
+                        <a href="{{ url('/about/about') }}" class="btn btn-outline-light btn-lg">Learn More</a>
                     </div>
                 </div>
             </div>
@@ -38,117 +38,104 @@
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="products-section py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title text-center mb-5">Bakery</h2>
-
-            <div class="product-scroll-wrapper">
-
-                <!-- BUTTON KIRI -->
-                <button class="scroll-btn left" onclick="scrollProduct(-1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-
-                <!-- AREA SCROLL -->
-                <div class="product-scroll" id="productScroll">
-
-                    <a href="{{ url('/menu/bread') }}" class="product-item">
-                        <div class="product-card">
-                            <div class="product-image">
-                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
-                            </div>
-                            <div class="product-info">
-                                <h3>Bread</h3>
-                                <p>Freshly baked pastries</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ url('/menu/cakes') }}" class="product-item">
-                        <div class="product-card">
-                            <div class="product-image">
-                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
-                            </div>
-                            <div class="product-info">
-                                <h3>Cakes</h3>
-                                <p>Freshly baked pastries</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ url('/menu/pastry') }}" class="product-item">
-                        <div class="product-card">
-                            <div class="product-image">
-                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
-                            </div>
-                            <div class="product-info">
-                                <h3>Pastry & Pie</h3>
-                                <p>Freshly baked pastries</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ url('/menu/sandwiches') }}" class="product-item">
-                        <div class="product-card">
-                            <div class="product-image">
-                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
-                            </div>
-                            <div class="product-info">
-                                <h3>Sandwiches</h3>
-                                <p>Freshly baked pastries</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ url('/menu/coffee') }}" class="product-item">
-                        <div class="product-card">
-                            <div class="product-image">
-                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
-                            </div>
-                            <div class="product-info">
-                                <h3>Coffee & Espresso</h3>
-                                <p>Freshly baked pastries</p>
-                            </div>
-                        </div>
-                    </a>
-
-                </div> <!-- TUTUP product-scroll -->
-
-                <button class="scroll-btn right" onclick="scrollProduct(1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-
-            </div> <!-- TUTUP wrapper -->
+<section id="products" class="products-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Bakery</h2>
+            <p class="text-muted mx-auto" style="max-width: 700px;">
+                MilkeyBakery menghadirkan berbagai menu kue lezat untuk menemani setiap momen spesial Anda.
+            </p>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section py-5">
+        <div class="row g-4 justify-content-center">
+
+            <!-- Bread -->
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ url('/menu/bread') }}" class="product-item">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                        </div>
+                        <div class="product-info">
+                            <h3>Bread</h3>
+                            <p>Freshly baked pastries</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Cakes -->
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ url('/menu/cakes') }}" class="product-item">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                        </div>
+                        <div class="product-info">
+                            <h3>Cakes</h3>
+                            <p>Freshly baked pastries</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Pastry -->
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ url('/menu/pastry') }}" class="product-item">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                        </div>
+                        <div class="product-info">
+                            <h3>Pastry & Pie</h3>
+                            <p>Freshly baked pastries</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Customer Service Section -->
+    <section id="services" class="services-section py-5">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="section-title">Visit Us</h2>
-                    <div class="contact-info">
-                        <div class="info-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <div>
-                                <h5>Address</h5>
-                                <p>Jl. Raya Bakery No. 123, Surabaya</p>
-                            </div>
+            <div class="text-center mb-5">
+                <h2 class="section-title">Layanan Pelanggan</h2>
+                <p class="text-muted mx-auto" style="max-width: 700px;">
+                    Kami berkomitmen memberikan pelayanan terbaik untuk kepuasan Anda
+                </p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Service 1 - Layanan Pelanggan -->
+                <div class="col-md-6">
+                    <div class="service-card-large">
+                        <div class="service-image-overlay">
+                            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800" alt="Customer Service" class="service-bg-image">
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="info-item">
-                            <i class="fas fa-phone"></i>
-                            <div>
-                                <h5>Phone</h5>
-                                <p>(031) 1234-5678</p>
-                            </div>
+                        <div class="service-content">
+                            <h3 class="service-large-title">Layanan Pelanggan</h3>
+                            <p class="service-large-text">Nikmati dukungan dan bantuan dari tim Customer Service kami yang berdedikasi</p>
+                            <a href="{{ url('/contact/service') }}" class="btn btn-service">Hubungi Kami</a>
                         </div>
-                        <div class="info-item">
-                            <i class="fas fa-clock"></i>
-                            <div>
-                                <h5>Hours</h5>
-                                <p>Mon-Sat: 7AM - 8PM<br>Sunday: 8AM - 6PM</p>
-                            </div>
+                    </div>
+                </div>
+
+                <!-- Service 2 - Pengiriman Kue -->
+                <div class="col-md-6">
+                    <div class="service-card-large">
+                        <div class="service-image-overlay">
+                            <img src="https://images.unsplash.com/photo-1591768793355-74d04bb6608f?w=800" alt="Cake Delivery" class="service-bg-image">
+                            <div class="service-overlay"></div>
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-large-title">Pengiriman Kue</h3>
+                            <p class="service-large-text">Delivery service dari kurir internal berpengalaman dari MilkeyBakery membuat produk kue Anda aman sampai tujuan</p>
+                            <a href="{{ url('/service/service') }}" class="btn btn-service">Cek Informasi</a>
                         </div>
                     </div>
                 </div>

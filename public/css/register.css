@@ -6,7 +6,7 @@
     --white: #ffffff;
 }
 
-/* Background halaman */
+/* Background */
 body {
     background: linear-gradient(180deg, #f7ece2, #f0dfd0, #e9d4c3);
     font-family: 'Poppins', sans-serif;
@@ -15,6 +15,7 @@ body {
     align-items: center;
     min-height: 100vh;
     color: var(--brown-dark);
+    margin: 0;
 }
 
 /* Wrapper */
@@ -36,26 +37,30 @@ body {
 /* Header */
 .register-header {
     text-align: center;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.6rem;
 }
 
 .logo-img {
     height: 90px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .register-title {
     font-size: 1.6rem;
     font-weight: 600;
-    color: var(--brown-dark);
+    margin: 0;
 }
 
-/* Form Group */
+/* Form */
+.register-card form {
+    width: 100%;
+}
+
 .form-group {
+    width: 100%;
     margin-bottom: 1.2rem;
 }
 
-/* Label */
 .label {
     display: block;
     font-weight: 600;
@@ -63,24 +68,26 @@ body {
     color: var(--brown);
 }
 
-/* Input */
+/* INPUT (FIX PANJANG & SIMETRIS) */
 .input {
     width: 100%;
-    padding: 12px 15px;
+    box-sizing: border-box;
+    padding: 12px 14px;
     border-radius: 10px;
     border: 1.8px solid var(--brown-light);
     background-color: #fffaf6;
-    transition: all 0.25s ease;
+    transition: 0.25s ease;
 }
 
 .input:focus {
+    outline: none;
     border-color: var(--brown);
     box-shadow: 0 0 8px rgba(138, 91, 58, 0.3);
 }
 
 /* Error */
 .error {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-top: 4px;
     color: #c0392b;
 }
@@ -95,6 +102,7 @@ body {
 
 /* Link Login */
 .login-link {
+    font-size: 0.9rem;
     color: var(--brown-dark);
     text-decoration: underline;
     font-weight: 500;
@@ -104,16 +112,16 @@ body {
     color: var(--brown);
 }
 
-/* Tombol Register */
+/* Button Register */
 .btn-register {
     background-color: var(--brown);
     color: white;
-    padding: 10px 22px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: 0.25s ease;
 }
 
 .btn-register:hover {

@@ -2,121 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // tampilkan halaman cart
     public function index()
     {
-        $cart = session()->get('cart', []);
-        return view('cart', compact('cart'));
+        $cartItems = Cart::where('user_id', Auth::id())->get();
+
+        $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->qty);
+        $tax = $subtotal * 0.11;
+        $deliveryFee = 35000;
+        $discount = session('discount', 0);
+        $total = $subtotal + $tax + $deliveryFee - $discount;
+
+        return view('cart.cart', compact(
+            'cartItems',
+            'subtotal',
+            'tax',
+            'deliveryFee',
+            'total'
+        ));
     }
 
-    // tambah barang ke cart
-    public function add(Request $request)
+    public function update(Request $request, $id)
     {
-        $cart = session()->get('cart', []);
+        $cart = Cart::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-        $id = $request->id;
-
-        if (isset($cart[$id])) {
-            // kalau produk sudah ada, qty ditambah
-            $cart[$id]['qty'] += 1;
-        } else {
-            // kalau belum ada, buat item baru
-            $cart[$id] = [
-                'id'    => $id,
-                'name'  => $request->name,
-                'price' => $request->price,
-                'image' => $request->image,
-                'qty'   => 1
-            ];
+        if ($request->action === 'increase') {
+            $cart->qty++;
         }
 
-        session()->put('cart', $cart);
+        if ($request->action === 'decrease' && $cart->qty > 1) {
+            $cart->qty--;
+        }
 
-        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
+        $cart->save();
+
+        return redirect()->route('cart.index');
     }
 
-    // hapus 1 item dari cart
     public function remove($id)
     {
-        $cart = session()->get('cart', []);
+        Cart::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->delete();
 
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-        }
-
-        return redirect()->back()->with('success', 'Produk dihapus dari keranjang');
+        return redirect()->route('cart.index');
     }
 
-    // kosongkan cart
-    public function clear()
+    public function applyCoupon(Request $request)
     {
-        session()->forget('cart');
-        return redirect()->back()->with('success', 'Keranjang dikosongkan');
-    }
+        $coupons = [
+            'MILKEY10' => 10000,
+            'WELCOME20' => 20000,
+            'SAVE50' => 50000,
+        ];
 
-    // update qty (optional tapi bagus buat UKK)
-    public function update(Request $request)
-    {
-        $cart = session()->get('cart', []);
-
-        foreach ($request->qty as $id => $qty) {
-            if (isset($cart[$id])) {
-                $cart[$id]['qty'] = max(1, $qty);
-            }
+        if (isset($coupons[$request->coupon_code])) {
+            session(['discount' => $coupons[$request->coupon_code]]);
+            return redirect()->route('cart.index')->with('success', 'Coupon applied');
         }
 
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', 'Keranjang diperbarui');
+        return redirect()->route('cart.index')->with('error', 'Invalid coupon');
     }
-
-    // tambah qty
-public function increment($id)
-{
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$id])) {
-        $cart[$id]['qty'] += 1;
-        session()->put('cart', $cart);
-    }
-
-    return redirect()->back();
-}
-
-// kurang qty
-public function decrement($id)
-{
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$id])) {
-        $cart[$id]['qty'] -= 1;
-
-        if ($cart[$id]['qty'] <= 0) {
-            unset($cart[$id]);
-        }
-
-        session()->put('cart', $cart);
-    }
-
-    return redirect()->back();
-}
-
-// hapus item
-// public function remove($id)
-// {
-//     $cart = session()->get('cart', []);
-
-//     if (isset($cart[$id])) {
-//         unset($cart[$id]);
-//         session()->put('cart', $cart);
-//     }
-
-//     return redirect()->back();
-// }
-
 }
