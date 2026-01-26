@@ -15,7 +15,12 @@ class Cart extends Model
         'name',
         'price',
         'image',
-        'category',
         'qty',
     ];
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
+
 }

@@ -12,9 +12,16 @@ class Menu extends Model
     protected $fillable = [
         'name',
         'price',
+        'stock',
         'image',
         'category_id',
         'description',
         'is_available',
     ];
+
+       public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    
 }

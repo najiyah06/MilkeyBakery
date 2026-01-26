@@ -1,14 +1,22 @@
-@extends('layouts.navigation')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - MilkeyBakery</title>
 
-@section('title', 'My Profile - MilkeyBakery')
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-@push('styles')
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
 <style>
-/* ===== (STYLE TETAP, TIDAK DIUBAH) ===== */
 .profile-header {
     background: linear-gradient(135deg, #8B6F47 0%, #C9A57B 100%);
     padding: 40px 0;
-    margin-top: 56px;
+    margin-top: 20px;
     color: white;
 }
 .profile-container {
@@ -68,15 +76,33 @@
     background: linear-gradient(135deg, #C9A57B, #A0826D);
     color: white;
 }
+.btn-back-home {
+    background: white;
+    color: #8B6F47;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+.btn-back-home:hover {
+    background: #FFF3E6;
+    transform: translateY(-1px);
+}
 </style>
-@endpush
+</head>
 
-@section('content')
+<body>
 
 <!-- HEADER -->
 <section class="profile-header">
-    <div class="container">
+    <div class="container d-flex justify-content-between align-items-center">
         <h1>My Profile</h1>
+
+        <!-- BUTTON KEMBALI -->
+        <a href="{{ url('/') }}" class="btn-back-home">
+            <i class="fas fa-arrow-left me-2"></i>Kembali
+        </a>
     </div>
 </section>
 
@@ -97,7 +123,7 @@
         <p class="text-muted">{{ Auth::user()->email }}</p>
     </div>
 
-    <!-- ================= UPDATE PROFILE ================= -->
+    <!-- UPDATE PROFILE -->
     <h4 class="mb-3">Personal Information</h4>
 
     <form method="POST" action="{{ route('profile.update') }}">
@@ -122,10 +148,9 @@
 
     <hr class="my-5">
 
-    <!-- ================= CHANGE PASSWORD ================= -->
+    <!-- CHANGE PASSWORD -->
     <h4 class="mb-3">Change Password</h4>
 
-    {{-- 🔥 BREEZE DEFAULT ROUTE --}}
     <form method="POST" action="{{ url('/password') }}">
         @csrf
         @method('PUT')
@@ -152,7 +177,7 @@
 
     <hr class="my-5">
 
-    <!-- ================= DELETE ACCOUNT ================= -->
+    <!-- DELETE ACCOUNT -->
     <h4 class="text-danger mb-3">Danger Zone</h4>
 
     <form method="POST" action="{{ route('profile.destroy') }}"
@@ -168,14 +193,10 @@
 </div>
 </div>
 
-<!-- ================= SIDEBAR =================
+<!-- ================= SIDEBAR ================= -->
 <div class="col-lg-4">
-    <div class="sidebar-card">
+    <div class="profile-main-card">
         <h4>Quick Menu</h4>
-
-        <a href="{{ route('dashboard') }}" class="sidebar-menu-item">
-            <i class="fas fa-home me-2"></i>Dashboard
-        </a>
 
         <a href="{{ route('profile.edit') }}" class="sidebar-menu-item active">
             <i class="fas fa-user me-2"></i>My Profile
@@ -188,9 +209,11 @@
             </button>
         </form>
     </div>
-</div> -->
+</div>
 
 </div>
 </div>
 </section>
-@endsection
+
+</body>
+</html>

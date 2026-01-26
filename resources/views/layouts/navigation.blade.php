@@ -33,24 +33,43 @@
 
                 <!-- About -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/about/about') }}">About</a>
+                    <a class="nav-link {{ request()->is('about/*') ? 'active fw-semibold' : '' }}" 
+                       href="{{ url('/about/about') }}">
+                        About
+                    </a>
                 </li>
 
-                <!-- Menu -->
+                <!-- MENU USER DINAMIS -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->is('menu/*') ? 'active fw-semibold' : '' }}" 
+                       href="#" role="button" data-bs-toggle="dropdown">
                         Menu
                     </a>
+
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('menu.category', 'bread') }}">Bread</a></li>
-                        <li><a class="dropdown-item" href="{{ route('menu.category', 'cakes') }}">Cakes</a></li>
-                        <li><a class="dropdown-item" href="{{ route('menu.category', 'pastry') }}">Pastry & Pie</a></li>
+                        @if(isset($categories) && $categories->count())
+                            @foreach($categories as $category)
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('menu/' . $category->slug) ? 'active fw-bold' : '' }}"
+                                       href="{{ route('menu.category', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        @else
+                            <li>
+                                <span class="dropdown-item text-muted">
+                                    No categories yet
+                                </span>
+                            </li>
+                        @endif
                     </ul>
                 </li>
 
                 <!-- Contact -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->is('contact/*') ? 'active fw-semibold' : '' }}" 
+                       href="#" role="button" data-bs-toggle="dropdown">
                         Contact
                     </a>
                     <ul class="dropdown-menu">
@@ -61,54 +80,66 @@
 
                 <!-- Cart -->
                 <li class="nav-item ms-3">
-                    <a class="nav-link" href="{{ url('/cart') }}">
+                    <a class="nav-link {{ request()->is('cart') ? 'active fw-semibold' : '' }}" 
+                    href="{{ url('/cart') }}">
                         <i class="fas fa-shopping-cart"></i>
                         Cart
-                        @if(session('cart'))
-                            <span class="badge bg-danger">{{ count(session('cart')) }}</span>
+
+                        @php
+                            $cartCount = 0;
+
+                            if(Auth::check()) {
+                                $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('qty');
+                            }
+                        @endphp
+
+                        @if($cartCount > 0)
+                            <span class="badge bg-danger">{{ $cartCount }}</span>
                         @endif
                     </a>
                 </li>
 
                 <!-- Profile / Auth -->
                 @auth
-                <li class="nav-item dropdown ms-2">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
+                    <li class="nav-item dropdown ms-2">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown">
 
-                        <i class="fas fa-user-circle fs-5 me-1"></i>
-                        {{ Auth::user()->name }}
-                    </a>
+                            <i class="fas fa-user-circle fs-5 me-1"></i>
+                            {{ Auth::user()->name }}
+                        </a>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                <i class="fas fa-user me-2"></i>My Profile
-                            </a>
-                        </li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user me-2"></i> My Profile
+                                </a>
+                            </li>
 
-                        <li><hr class="dropdown-divider"></li>
+                            <li><hr class="dropdown-divider"></li>
 
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item text-danger">
-                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                 @else
-                <li class="nav-item ms-3">
-                    <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm me-2">Login</a>
-                    <a href="{{ route('register') }}" class="btn btn-pink btn-sm">Register</a>
-                </li>
+                    <li class="nav-item ms-3">
+                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm me-2">
+                            Login
+                        </a>
+                        <a href="{{ route('register') }}" class="btn btn-pink btn-sm">
+                            Register
+                        </a>
+                    </li>
                 @endauth
 
             </ul>
@@ -118,10 +149,12 @@
 <!-- ================= END NAVBAR ================= -->
 
 <!-- Main Content -->
-@yield('content')
+<main style="padding-top: 90px;">
+    @yield('content')
+</main>
 
 <!-- ================= FOOTER ================= -->
-<footer class="footer py-4">
+<footer class="footer py-4 mt-5">
     <div class="container text-center">
         <p class="mb-2">&copy; 2024 MilkeyBakery. All rights reserved.</p>
 

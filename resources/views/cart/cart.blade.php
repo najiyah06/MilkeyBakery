@@ -360,7 +360,7 @@
                                                 <img src="{{ $item->image }}" alt="{{ $item->name }}" class="cart-product-image">
                                                 <div class="cart-product-details">
                                                     <h5>{{ $item->name }}</h5>
-                                                    <span class="cart-product-category">{{ $item->category }}</span>
+                                                    <span class="cart-product-category">{{ $item->menu->category->name }}</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -369,11 +369,14 @@
                                         </td>
                                         <td>
                                             <div class="quantity-control">
-                                                <form method="POST" action="{{ route('cart.update', $item->id) }}" style="display: flex; gap: 10px; align-items: center;">
+                                                <form method="POST" action="{{ route('cart.update', $item->id) }}" class="quantity-control">
                                                     @csrf
                                                     @method('PUT')
+
                                                     <button type="submit" name="action" value="decrease" class="qty-btn">-</button>
-                                                    <input type="number" name="qty" class="qty-input" value="{{ $item->qty }}" min="1" readonly>
+
+                                                    <input type="text" class="qty-input" value="{{ $item->qty }}" readonly>
+
                                                     <button type="submit" name="action" value="increase" class="qty-btn">+</button>
                                                 </form>
                                             </div>
@@ -404,17 +407,6 @@
                         <h3><i class="fas fa-receipt me-2"></i>Order Summary</h3>
 
                         <!-- Coupon Section -->
-                        <div class="coupon-section">
-                            <label style="color: #8B6F47; font-weight: 600; margin-bottom: 10px; display: block;">Have a coupon?</label>
-                            <form method="POST" action="{{ route('cart.applyCoupon') }}">
-                                @csrf
-                                <div class="coupon-input-group">
-                                    <input type="text" name="coupon_code" class="coupon-input" placeholder="Enter coupon code">
-                                    <button type="submit" class="btn-apply-coupon">Apply</button>
-                                </div>
-                            </form>
-                        </div>
-
                         <div class="summary-item">
                             <span>Subtotal</span>
                             <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
@@ -442,12 +434,8 @@
                             <span class="amount">Rp {{ number_format($total, 0, ',', '.') }}</span>
                         </div>
 
-                        <button type="button" onclick="alert('Checkout belum dibuat')">
-                            <i class="fas fa-lock me-2"></i>Proceed to Checkout
-                        </button>
-
-                        <a href="{{ url('/') }}#products" class="btn-continue-shopping">
-                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                        <a href="{{ route('checkout.index') }}" class="btn-continue-shopping">
+                            <i class="fas fa-arrow-right me-2"></i>Continue to Checkout
                         </a>
                     </div>
                 </div>
@@ -471,15 +459,3 @@
         </div>
     </section>
 @endsection
-
-@push('scripts')
-<script>
-    // Auto-submit quantity form on button click
-    document.querySelectorAll('.qty-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            this.closest('form').submit();
-        });
-    });
-</script>
-@endpush
