@@ -135,7 +135,7 @@
                         <div class="service-content">
                             <h3 class="service-large-title">Pengiriman Kue</h3>
                             <p class="service-large-text">Delivery service dari kurir internal berpengalaman dari MilkeyBakery membuat produk kue Anda aman sampai tujuan</p>
-                            <a href="{{ url('/service/service') }}" class="btn btn-service">Cek Informasi</a>
+                            <a href="{{ url('/contact/pengiriman') }}" class="btn btn-service">Cek Informasi</a>
                         </div>
                     </div>
                 </div>

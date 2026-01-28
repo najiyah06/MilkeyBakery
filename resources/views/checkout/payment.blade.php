@@ -1,4 +1,4 @@
-@extends('layouts.navigation')
+<!-- @extends('layouts.navigation')
 
 @section('title', 'Payment')
 
@@ -31,4 +31,4 @@ document.getElementById('pay-button').addEventListener('click', function () {
     });
 });
 </script>
-@endsection
+@endsection -->

@@ -3,8 +3,12 @@
 @section('title', 'Checkout - MilkeyBakery')
 
 @push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <style>
-body { background: #FFF8F0; }
+body {
+    background: #FFF8F0;
+}
 
 .checkout-header {
     background: linear-gradient(135deg, #8B6F47, #C9A57B);
@@ -73,6 +77,10 @@ body { background: #FFF8F0; }
     border-radius: 15px;
     font-weight: 700;
 }
+
+.btn-checkout:hover {
+    opacity: 0.9;
+}
 </style>
 @endpush
 
@@ -85,173 +93,291 @@ body { background: #FFF8F0; }
 </section>
 
 <section class="py-5">
-    <div class="container">
-        <form method="POST" action="{{ route('checkout.process') }}">
-            @csrf
+<div class="container">
 
-            <div class="row">
-                {{-- LEFT --}}
-                <div class="col-lg-7">
-                    <div class="checkout-card">
-                        <h3>Shipping Information</h3>
+<form method="POST" action="{{ route('checkout.process') }}" id="checkoutForm">
+@csrf
 
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" name="name"
-                                value="{{ Auth::user()->name }}" required>
-                        </div>
+<!-- Hidden backend payment field -->
+<input type="hidden" name="payment_method" id="paymentMethodInput">
 
-                        <div class="mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="text" class="form-control" name="phone" required>
-                        </div>
+<div class="row">
 
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email"
-                                value="{{ Auth::user()->email }}" required>
-                        </div>
+<!-- LEFT -->
+<div class="col-lg-7">
 
-                        <div class="mb-3">
-                            <label class="form-label">Address</label>
-                            <textarea class="form-control" name="address" rows="3" required></textarea>
-                        </div>
+    <div class="checkout-card">
+        <h3>Shipping Information</h3>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">City</label>
-                                <select class="form-control" name="city" id="citySelect" required>
-                                    <option value="">-- Pilih Kota --</option>
-                                    <option value="South Jakarta">South Jakarta</option>
-                                    <option value="Central Jakarta">Central Jakarta</option>
-                                    <option value="West Jakarta">West Jakarta</option>
-                                    <option value="North Jakarta">North Jakarta</option>
-                                    <option value="East Jakarta">East Jakarta</option>
-                                    <option value="Depok">Depok</option>
-                                    <option value="Tangerang">Tangerang</option>
-                                    <option value="Bekasi">Bekasi</option>
-                                </select>
-                            </div>
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required>
+        </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Postal Code</label>
-                                <input type="text" class="form-control" name="postal_code" required>
-                            </div>
-                        </div>
-                    </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" required>
+        </div>
 
-                    <div class="checkout-card">
-                        <h3>Payment Method</h3>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>
+        </div>
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" value="transfer" checked>
-                            <label class="form-check-label">Bank Transfer</label>
-                        </div>
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" name="address" rows="3" required></textarea>
+        </div>
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" value="cod">
-                            <label class="form-check-label">Cash on Delivery</label>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- RIGHT --}}
-                <div class="col-lg-5">
-                    <div class="checkout-card">
-                        <h3>Order Summary</h3>
-
-                        @foreach($cartItems as $item)
-                        <div class="order-item">
-                            <img src="{{ $item->image }}" alt="">
-                            <div>
-                                <strong>{{ $item->name }}</strong><br>
-                                <small>{{ $item->menu->category->name ?? '-' }}</small><br>
-                                x{{ $item->qty }}
-                            </div>
-                            <div class="ms-auto">
-                                Rp {{ number_format($item->price * $item->qty,0,',','.') }}
-                            </div>
-                        </div>
-                        @endforeach
-
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span id="subtotalDisplay">Rp {{ number_format($subtotal,0,',','.') }}</span>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Tax (11%)</span>
-                            <span>Rp {{ number_format($tax,0,',','.') }}</span>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Delivery</span>
-                            <span id="deliveryFeeDisplay">Rp {{ number_format($deliveryFee,0,',','.') }}</span>
-                        </div>
-
-                        <hr>
-
-                        <div class="summary-row summary-total">
-                            <span>Total</span>
-                            <span id="totalDisplay">Rp {{ number_format($total,0,',','.') }}</span>
-                        </div>
-
-                        <button type="submit" class="btn-checkout mt-3">
-                            Place Order
-                        </button>
-
-                        <a href="{{ route('cart.index') }}" class="btn btn-outline-secondary w-100 mt-2">
-                            Back to Cart
-                        </a>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">City (Surabaya)</label>
+                <select class="form-control" name="city" id="citySelect" required>
+                    <option value="">-- Pilih Kecamatan --</option>
+                    @foreach([
+                        "Tegalsari","Genteng","Gubeng","Wonokromo","Rungkut","Sukolilo",
+                        "Mulyorejo","Kenjeran","Tambaksari","Sawahan","Tandes","Benowo",
+                        "Lakarsantri","Dukuh Pakis","Wiyung","Gayungan","Jambangan"
+                    ] as $city)
+                        <option value="{{ $city }}">{{ $city }}</option>
+                    @endforeach
+                </select>
             </div>
-        </form>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Postal Code</label>
+                <input type="text" class="form-control" name="postal_code" required>
+            </div>
+        </div>
     </div>
+
+    <!-- PAYMENT -->
+    <div class="checkout-card">
+        <h3>Payment Method</h3>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="payment_option" id="paymentTransfer" value="transfer" required>
+            <label class="form-check-label" for="paymentTransfer">Bank Transfer (Midtrans)</label>
+        </div>
+
+        <div class="form-check mt-2">
+            <input class="form-check-input" type="radio" name="payment_option" id="paymentCOD" value="cod" required>
+            <label class="form-check-label" for="paymentCOD">Cash on Delivery</label>
+        </div>
+    </div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="col-lg-5">
+
+    <div class="checkout-card">
+        <h3>Order Summary</h3>
+
+        @foreach($cartItems as $item)
+        <div class="order-item">
+            <img src="{{ $item->image }}" alt="">
+
+            <div>
+                <strong>{{ $item->name }}</strong><br>
+                x{{ $item->qty }}
+            </div>
+
+            <div class="ms-auto">
+                Rp {{ number_format($item->price * $item->qty,0,',','.') }}
+            </div>
+        </div>
+        @endforeach
+
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span>Rp {{ number_format($subtotal,0,',','.') }}</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Tax (11%)</span>
+            <span>Rp {{ number_format($tax,0,',','.') }}</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Delivery</span>
+            <span>Rp {{ number_format($deliveryFee,0,',','.') }}</span>
+        </div>
+
+        <hr>
+
+        <div class="summary-row summary-total">
+            <span>Total</span>
+            <span>Rp {{ number_format($total,0,',','.') }}</span>
+        </div>
+
+        <button type="button" id="payButton" class="btn-checkout mt-3">
+            Place Order
+        </button>
+
+        <a href="{{ route('cart.index') }}" class="btn btn-outline-secondary w-100 mt-2">
+            Back to Cart
+        </a>
+    </div>
+
+</div>
+
+</div>
+</form>
+
+</div>
 </section>
+
 @endsection
 
+
 @push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$('#citySelect').select2({ width: '100%' });
+</script>
+
+<!-- MIDTRANS -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const subtotal = Number(@json($subtotal ?? 0));
-    let deliveryFee = Number(@json($deliveryFee ?? 0));
+    const form = document.getElementById('checkoutForm');
+    const payButton = document.getElementById('payButton');
 
-    const fees = {
-        "South Jakarta": 35000,
-        "Central Jakarta": 40000,
-        "West Jakarta": 45000,
-        "North Jakarta": 50000,
-        "East Jakarta": 60000,
-        "Depok": 60000,
-        "Tangerang": 70000,
-        "Bekasi": 75000,
-    };
+    function processPayment() {
+        const selected = document.querySelector('input[name="payment_option"]:checked');
 
-    function updateTotal() {
-        const tax = subtotal * 0.11;
-        const total = subtotal + tax + deliveryFee;
+        if (!selected) {
+            alert("Pilih metode pembayaran dulu!");
+            return;
+        }
 
-        document.getElementById('deliveryFeeDisplay').innerText =
-            'Rp ' + deliveryFee.toLocaleString('id-ID');
+        // Set payment method value
+        document.getElementById('paymentMethodInput').value = selected.value;
 
-        document.getElementById('totalDisplay').innerText =
-            'Rp ' + total.toLocaleString('id-ID');
-    }
+        // Create FormData from form
+        const formData = new FormData(form);
 
-    updateTotal();
+        // Disable button to prevent double submission
+        payButton.disabled = true;
+        payButton.textContent = 'Processing...';
 
-    const citySelect = document.getElementById('citySelect');
-    if (citySelect) {
-        citySelect.addEventListener('change', function () {
-            if (fees[this.value]) {
-                deliveryFee = fees[this.value];
-                updateTotal();
+        // Send request WITHOUT "Accept: application/json" header
+        fetch("{{ route('checkout.process') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: formData
+        })
+        .then(res => {
+            console.log('Response Status:', res.status);
+            console.log('Response OK:', res.ok);
+            
+            // Get response as text first
+            return res.text().then(text => {
+                console.log('Raw Response:', text);
+                
+                try {
+                    const data = JSON.parse(text);
+                    return { ok: res.ok, status: res.status, data: data };
+                } catch (e) {
+                    console.error("Response is not JSON. Raw text:", text);
+                    throw new Error('Server returned non-JSON response: ' + text.substring(0, 200));
+                }
+            });
+        })
+        .then(result => {
+            // Re-enable button
+            payButton.disabled = false;
+            payButton.textContent = 'Place Order';
+
+            console.log('Parsed Result:', result);
+
+            if (!result.ok) {
+                console.error("Server error response:", result.data);
+                
+                let errorMsg = 'Server error occurred';
+                if (result.data.message) {
+                    errorMsg = result.data.message;
+                } else if (result.data.error) {
+                    errorMsg = result.data.error;
+                }
+                
+                alert("Error: " + errorMsg);
+                return;
             }
+
+            const data = result.data;
+            console.log("SERVER SUCCESS RESPONSE:", data);
+
+            // Handle COD
+            if (data.cod) {
+                window.location.href = data.redirect;
+                return;
+            }
+
+            // Handle Midtrans
+            if (!data.snapToken) {
+                alert("Snap token gagal dibuat");
+                return;
+            }
+
+            window.snap.pay(data.snapToken, {
+                onSuccess: function(result) {
+                    console.log('Payment success:', result);
+                    window.location.href = "/orders/" + data.order_id;
+                },
+                onPending: function(result) {
+                    console.log('Payment pending:', result);
+                    alert("Menunggu pembayaran...");
+                    window.location.href = "/orders/" + data.order_id;
+                },
+                onError: function(result) {
+                    console.log('Payment error:', result);
+                    alert("Payment gagal");
+                },
+                onClose: function() {
+                    console.log('Customer closed the popup without finishing payment');
+                }
+            });
+        })
+        .catch(err => {
+            // Re-enable button
+            payButton.disabled = false;
+            payButton.textContent = 'Place Order';
+            
+            console.error("Fetch error details:", err);
+            alert("Server error — cek console untuk detail\n\n" + err.message);
         });
     }
 
+    payButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const selected = document.querySelector('input[name="payment_option"]:checked');
+
+        if (!selected) {
+            alert("Pilih metode pembayaran dulu!");
+            return;
+        }
+
+        if (selected.value === "transfer") {
+            // Process with Midtrans
+            processPayment();
+        } else {
+            // Process COD - submit form normally
+            document.getElementById('paymentMethodInput').value = "cod";
+            form.submit();
+        }
+    });
+
 });
 </script>
+
 @endpush

@@ -8,27 +8,44 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        body { background: #f4f6f9; }
+        body { 
+            background: #FFF8F0; 
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* SIDEBAR */
         .sidebar {
             width: 240px;
             min-height: 100vh;
-            background: #2f2f2f;
+            background: linear-gradient(180deg, #8B6F47, #C9A57B);
             color: white;
+            padding-top: 15px;
         }
+
+        .sidebar h4 {
+            font-weight: 700;
+        }
+
         .sidebar a {
-            color: #ccc;
+            color: #fff;
             text-decoration: none;
             display: block;
-            padding: 12px 20px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin: 6px 10px;
+            transition: 0.2s ease;
         }
+
         .sidebar a:hover {
-            background: #444;
-            color: white;
+            background: rgba(255,255,255,0.2);
         }
+
+        /* TOPBAR */
         .topbar {
             background: white;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
+            padding: 15px 20px;
+            border-bottom: 1px solid #EADBC8;
+            box-shadow: 0 4px 12px rgba(139,111,71,.12);
         }
     </style>
 </head>

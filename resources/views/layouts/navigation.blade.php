@@ -66,6 +66,25 @@
                     </ul>
                 </li>
 
+                <!-- Search -->
+                <form action="{{ route('menu.search') }}" method="GET" class="d-flex ms-3 align-items-center">
+
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 rounded-start-pill">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+
+                        <input 
+                            type="text" 
+                            name="q" 
+                            class="form-control border-start-0 rounded-end-pill" 
+                            placeholder="Search menu..."
+                            value="{{ request('q') }}"
+                            required
+                        >
+                    </div>
+
+                </form>
                 <!-- Contact -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('contact/*') ? 'active fw-semibold' : '' }}" 
