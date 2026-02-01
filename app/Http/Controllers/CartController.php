@@ -15,7 +15,7 @@ class CartController extends Controller
 
         $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->qty);
         $tax = $subtotal * 0.11;
-        $deliveryFee = 35000;
+        $deliveryFee = 0;
         $discount = session('discount', 0);
         $total = $subtotal + $tax + $deliveryFee - $discount;
 

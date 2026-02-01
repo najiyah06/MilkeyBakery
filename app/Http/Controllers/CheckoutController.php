@@ -24,7 +24,7 @@ class CheckoutController extends Controller
 
         $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->qty);
         $tax = $subtotal * 0.11;
-        $deliveryFee = 35000;
+        $deliveryFee = 0;
         $total = $subtotal + $tax + $deliveryFee;
 
         return view('checkout.checkout', compact(
@@ -79,6 +79,31 @@ class CheckoutController extends Controller
         return $decoded['token'];
     }
 
+    private function getDeliveryFeeByCity($city)
+    {
+        $fees = [
+            'Tegalsari'     => 20000,
+            'Genteng'       => 20000,
+            'Gubeng'        => 20000,
+            'Wonokromo'     => 20000,
+            'Tambaksari'    => 20000,
+            'Sawahan'       => 20000,
+            'Rungkut'       => 25000,
+            'Sukolilo'      => 25000,
+            'Mulyorejo'     => 25000,
+            'Gayungan'      => 25000,
+            'Jambangan'     => 25000,
+            'Kenjeran'      => 30000,
+            'Tandes'        => 30000,
+            'Dukuh Pakis'   => 30000,
+            'Wiyung'        => 30000,
+            'Benowo'        => 35000,
+            'Lakarsantri'   => 35000,
+        ];
+
+        return $fees[$city] ?? 0;
+    }
+
     public function process(Request $request)
     {
         try {
@@ -111,7 +136,7 @@ class CheckoutController extends Controller
             }
             
             $tax = (int) round($subtotal * 0.11);
-            $deliveryFee = 35000;
+            $deliveryFee = $this->getDeliveryFeeByCity($validated['city']);
             $total = $subtotal + $tax + $deliveryFee;
 
             Log::info('Prices:', [

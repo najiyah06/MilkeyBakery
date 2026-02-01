@@ -115,6 +115,7 @@ Route::prefix('admin')
 
         Route::resource('menus', AdminMenuController::class);
         Route::resource('categories', CategoryController::class);
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
     });
 
 Route::get('/debug-midtrans-response', function() {

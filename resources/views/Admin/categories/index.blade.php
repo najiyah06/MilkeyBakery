@@ -6,10 +6,12 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Kategori</h2>
+
         <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
             + Tambah Kategori
         </a>
     </div>
+
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -34,26 +36,22 @@
                             <td>{{ $category->slug }}</td>
                             <td>
                                 <a href="{{ route('admin.categories.edit', $category) }}"
-                                   class="btn btn-sm btn-warning">
-                                   Edit
-                                </a>
+                                class="btn btn-sm btn-warning">Edit</a>
 
                                 <form action="{{ route('admin.categories.destroy', $category) }}"
-                                      method="POST" class="d-inline">
+                                    method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Yakin nih mau hapus kategori ini? 😢')">
                                     @csrf
                                     @method('DELETE')
-
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Hapus kategori ini?')">
-                                        Hapus
-                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="4" class="text-center text-muted">
-                                Belum ada kategori
+                                Kategori tidak ditemukan
                             </td>
                         </tr>
                     @endforelse

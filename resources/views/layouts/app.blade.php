@@ -66,9 +66,12 @@
         </a>
 
         <a href="{{ route('admin.categories.index') }}">
-    <i class="fas fa-bread-slice me-2"></i> Kategori
-</a>
+            <i class="fas fa-bread-slice me-2"></i> Kategori
+        </a>
 
+        <a href="{{ route('admin.orders.index') }}">
+            <i class="fas fa-receipt me-2"></i> Orders
+        </a>
 
     </div>
 

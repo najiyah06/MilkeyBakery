@@ -6,13 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $menus = Menu::with('category')->latest()->get();
-        return view('admin.menus.index', compact('menus'));
+        $search = $request->query('search');
+
+        $menus = Menu::with('category')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.menus.index', compact('menus', 'search'));
     }
 
     public function create()
@@ -23,7 +37,13 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        Menu::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('menus', 'public');
+        }
+
+        Menu::create($data);
         return redirect()->route('admin.menus.index');
     }
 
@@ -35,7 +55,16 @@ class MenuController extends Controller
 
     public function update(Request $request, Menu $menu)
     {
-        $menu->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            if ($menu->image && Storage::disk('public')->exists($menu->image)) {
+                Storage::disk('public')->delete($menu->image);
+            }
+            $data['image'] = $request->file('image')->store('menus', 'public');
+        }
+
+        $menu->update($data);
         return redirect()->route('admin.menus.index');
     }
 

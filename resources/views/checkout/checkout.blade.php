@@ -116,7 +116,13 @@ body {
 
         <div class="mb-3">
             <label class="form-label">Phone</label>
-            <input type="text" class="form-control" name="phone" required>
+            <input type="text"
+                class="form-control"
+                name="phone"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                required>
         </div>
 
         <div class="mb-3">
@@ -131,7 +137,7 @@ body {
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">City (Surabaya)</label>
+                <label class="form-label">Kecamatan (Surabaya)</label>
                 <select class="form-control" name="city" id="citySelect" required>
                     <option value="">-- Pilih Kecamatan --</option>
                     @foreach([
@@ -201,14 +207,12 @@ body {
 
         <div class="summary-row">
             <span>Delivery</span>
-            <span>Rp {{ number_format($deliveryFee,0,',','.') }}</span>
+            <span id="deliveryFeeText">Rp {{ number_format($deliveryFee,0,',','.') }}</span>
         </div>
-
         <hr>
-
         <div class="summary-row summary-total">
             <span>Total</span>
-            <span>Rp {{ number_format($total,0,',','.') }}</span>
+            <span id="totalText">Rp {{ number_format($total,0,',','.') }}</span>
         </div>
 
         <button type="button" id="payButton" class="btn-checkout mt-3">
@@ -379,5 +383,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const deliveryText = document.getElementById('deliveryFeeText');
+    const totalText = document.getElementById('totalText');
+
+    const subtotal = {{ $subtotal }};
+    const tax = {{ $tax }};
+
+    const deliveryFees = {
+        Tegalsari: 20000,
+        Genteng: 20000,
+        Gubeng: 20000,
+        Wonokromo: 20000,
+        Tambaksari: 20000,
+        Sawahan: 20000,
+        Rungkut: 25000,
+        Sukolilo: 25000,
+        Mulyorejo: 25000,
+        Gayungan: 25000,
+        Jambangan: 25000,
+        Kenjeran: 30000,
+        Tandes: 30000,
+        "Dukuh Pakis": 30000,
+        Wiyung: 30000,
+        Benowo: 35000,
+        Lakarsantri: 35000
+    };
+
+    $('#citySelect').on('change', function () {
+        const city = $(this).val();
+        const delivery = deliveryFees[city] ?? 0;
+        const total = subtotal + tax + delivery;
+
+        deliveryText.textContent = 'Rp ' + delivery.toLocaleString('id-ID');
+        totalText.textContent = 'Rp ' + total.toLocaleString('id-ID');
+    });
+
+});
+</script>
+
 
 @endpush

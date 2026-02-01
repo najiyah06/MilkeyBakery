@@ -12,11 +12,15 @@ class CategoryController extends Controller
     // =======================
     // TAMPILKAN LIST KATEGORI
     // =======================
-    public function index()
-    {
-        $categories = Category::latest()->get();
-        return view('admin.categories.index', compact('categories'));
-    }
+public function index()
+{
+    $categories = Category::orderBy('created_at', 'desc')
+        ->paginate(10);
+
+    return view('admin.categories.index', compact('categories'));
+}
+
+
 
     // =======================
     // FORM TAMBAH KATEGORI

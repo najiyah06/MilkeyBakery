@@ -25,7 +25,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.menus.store') }}" method="POST">
+            <form action="{{ route('admin.menus.store') }}" 
+                  method="POST" 
+                  enctype="multipart/form-data">
                 @csrf
 
                 {{-- NAMA --}}
@@ -41,8 +43,7 @@
                     <select name="category_id" class="form-select" required>
                         <option value="">-- Pilih Kategori --</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}">
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -53,27 +54,26 @@
                 <div class="mb-3">
                     <label class="form-label">Stok</label>
                     <input type="number" name="stock" class="form-control"
-                        value="{{ old('stock', 0) }}" min="0" required>
+                        value="0" min="0" required>
                 </div>
 
                 {{-- HARGA --}}
                 <div class="mb-3">
                     <label class="form-label">Harga</label>
                     <input type="number" name="price" class="form-control"
-                        value="{{ old('price') }}" min="0" required>
+                        min="0" required>
                 </div>
 
                 {{-- DESKRIPSI --}}
                 <div class="mb-3">
                     <label class="form-label">Deskripsi</label>
-                    <textarea name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
                 </div>
 
                 {{-- GAMBAR --}}
                 <div class="mb-3">
-                    <label class="form-label">Image URL</label>
-                    <input type="text" name="image" class="form-control"
-                        value="{{ old('image') }}" required>
+                    <label class="form-label">Gambar Menu</label>
+                    <input type="file" name="image" class="form-control" required>
                 </div>
 
                 {{-- STATUS --}}
