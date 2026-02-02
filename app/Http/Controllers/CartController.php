@@ -84,20 +84,4 @@ class CartController extends Controller
 
         return redirect()->route('cart.index');
     }
-
-    public function applyCoupon(Request $request)
-    {
-        $coupons = [
-            'MILKEY10' => 10000,
-            'WELCOME20' => 20000,
-            'SAVE50' => 50000,
-        ];
-
-        if (isset($coupons[$request->coupon_code])) {
-            session(['discount' => $coupons[$request->coupon_code]]);
-            return redirect()->route('cart.index')->with('success', 'Coupon applied');
-        }
-
-        return redirect()->route('cart.index')->with('error', 'Invalid coupon');
-    }
 }

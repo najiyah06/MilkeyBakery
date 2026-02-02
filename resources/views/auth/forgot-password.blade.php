@@ -2,6 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+
+    <link rel="icon" href="{{ asset('images/2.png') }}" type="image/png">
+
     <title>Lupa Password - MilkeyBakery</title>
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
@@ -11,7 +14,7 @@
     <div class="login-card">
 
         <div class="login-header">
-            <img src="{{ asset('images/Logo1a.png') }}" class="logo-img">
+            <img src="{{ asset('images/1.png') }}" class="logo-img">
             <h2 class="login-title">Lupa Password</h2>
         </div>
 

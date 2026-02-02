@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ asset('images/2.png') }}" type="image/png">
     <title>Register - MilkeyBakery</title>
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 </head>
@@ -11,7 +12,7 @@
     <div class="register-card">
 
         <div class="register-header">
-            <img src="{{ asset('images/Logo1a.png') }}" class="logo-img">
+            <img src="{{ asset('images/1.png') }}" class="logo-img">
             <h2 class="register-title">Buat Akun MilkeyBakery</h2>
         </div>
 

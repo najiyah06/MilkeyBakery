@@ -54,7 +54,7 @@
                 <a href="{{ url('/menu/bread') }}" class="product-item">
                     <div class="product-card">
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                            <img src="{{ asset('/images/bread01.jpg') }}">
                         </div>
                         <div class="product-info">
                             <h3>Bread</h3>
@@ -69,7 +69,7 @@
                 <a href="{{ url('/menu/cakes') }}" class="product-item">
                     <div class="product-card">
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                            <img src="{{ asset('/images/stroberi.png') }}">
                         </div>
                         <div class="product-info">
                             <h3>Cakes</h3>
@@ -84,10 +84,10 @@
                 <a href="{{ url('/menu/pastry') }}" class="product-item">
                     <div class="product-card">
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500">
+                            <img src="{{ asset('/images/pastry.jpg') }}">
                         </div>
                         <div class="product-info">
-                            <h3>Pastry & Pie</h3>
+                            <h3>Pastry</h3>
                             <p>Freshly baked pastries</p>
                         </div>
                     </div>

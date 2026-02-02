@@ -36,10 +36,6 @@ class CheckoutController extends Controller
         ));
     }
 
-    /**
-     * Custom function to get Snap Token directly via cURL
-     * Bypasses Midtrans library bug
-     */
     private function getSnapTokenDirect($params, $serverKey)
     {
         $url = 'https://app.sandbox.midtrans.com/snap/v1/transactions';
@@ -104,190 +100,187 @@ class CheckoutController extends Controller
         return $fees[$city] ?? 0;
     }
 
-    public function process(Request $request)
-    {
-        try {
-            Log::info('=== CHECKOUT STARTED ===');
-            
-            // VALIDATION
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'phone' => 'required|string|max:20',
-                'email' => 'required|email',
-                'address' => 'required|string',
-                'city' => 'required|string',
-                'postal_code' => 'required|string|max:10',
-                'payment_method' => 'required|in:transfer,cod',
-            ]);
+public function process(Request $request)
+{
+    try {
+        Log::info('=== CHECKOUT STARTED ===');
 
-            // GET CART
-            $cartItems = Cart::where('user_id', Auth::id())->get();
+        // ====================
+        // VALIDATION
+        // ====================
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'postal_code' => 'required|string|max:10',
+            'payment_method' => 'required|in:transfer,cod',
+        ]);
 
-            if ($cartItems->isEmpty()) {
-                return response()->json(['error' => true, 'message' => 'Cart empty'], 400);
+        // ====================
+        // GET CART
+        // ====================
+        $cartItems = Cart::where('user_id', Auth::id())->get();
+
+        if ($cartItems->isEmpty()) {
+            // COD → redirect HTML
+            if ($validated['payment_method'] === 'cod') {
+                return redirect()->route('cart.index')
+                    ->with('error', 'Cart masih kosong');
             }
 
-            Log::info('Cart Items Count: ' . $cartItems->count());
+            // TRANSFER → JSON (UNTUK MIDTRANS)
+            return response()->json([
+                'error' => true,
+                'message' => 'Cart empty'
+            ], 400);
+        }
 
-            // CALCULATE PRICE
-            $subtotal = 0;
-            foreach ($cartItems as $item) {
-                $subtotal += ((int) $item->price * (int) $item->qty);
-            }
-            
-            $tax = (int) round($subtotal * 0.11);
-            $deliveryFee = $this->getDeliveryFeeByCity($validated['city']);
-            $total = $subtotal + $tax + $deliveryFee;
+        // ====================
+        // CALCULATE PRICE
+        // ====================
+        $subtotal = 0;
+        foreach ($cartItems as $item) {
+            $subtotal += ((int) $item->price * (int) $item->qty);
+        }
 
-            Log::info('Prices:', [
-                'subtotal' => $subtotal,
-                'tax' => $tax,
-                'delivery' => $deliveryFee,
-                'total' => $total
+        $tax = (int) round($subtotal * 0.11);
+        $deliveryFee = $this->getDeliveryFeeByCity($validated['city']);
+        $total = $subtotal + $tax + $deliveryFee;
+
+        // ====================
+        // ORDER CODE
+        // ====================
+        $orderCode = 'ORD' . time() . rand(100, 999);
+
+        // ====================
+        // CREATE ORDER
+        // ====================
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'order_code' => $orderCode,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'city' => $validated['city'],
+            'postal_code' => $validated['postal_code'],
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'delivery_fee' => $deliveryFee,
+            'total' => $total,
+            'status' => 'pending',
+            'payment_method' => $validated['payment_method'],
+        ]);
+
+        // ====================
+        // SAVE ORDER ITEMS
+        // ====================
+        foreach ($cartItems as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_name' => $item->name,
+                'price' => (int) $item->price,
+                'qty' => (int) $item->qty,
+                'subtotal' => (int) ($item->price * $item->qty),
             ]);
+        }
 
-            // ORDER CODE
-            $orderCode = 'ORD' . time() . rand(100, 999);
+        // ====================
+        // COD FLOW (HTML REDIRECT)
+        // ====================
+        if ($validated['payment_method'] === 'cod') {
+            Log::info('COD selected');
 
-            // CREATE ORDER
-            $order = Order::create([
-                'user_id' => Auth::id(),
-                'order_code' => $orderCode,
-                'name' => $validated['name'],
+            Cart::where('user_id', Auth::id())->delete();
+
+            // ⬅️ STRUK LANGSUNG
+            return redirect()->route('orders.show', $order->id);
+        }
+
+        // ==================================================
+        // MIDTRANS FLOW (ASLI PUNYAMU — TIDAK DIUBAH)
+        // ==================================================
+        Log::info('=== MIDTRANS PAYMENT ===');
+
+        $serverKey = config('services.midtrans.server_key');
+
+        if (empty($serverKey)) {
+            throw new \Exception('Midtrans server key not configured');
+        }
+
+        // BUILD ITEMS
+        $items = [];
+        $counter = 1;
+
+        foreach ($cartItems as $item) {
+            $items[] = [
+                'id' => 'ITEM' . $counter,
+                'price' => (int) $item->price,
+                'quantity' => (int) $item->qty,
+                'name' => substr($item->name, 0, 50)
+            ];
+            $counter++;
+        }
+
+        // Tax
+        $items[] = [
+            'id' => 'TAX',
+            'price' => $tax,
+            'quantity' => 1,
+            'name' => 'Tax 11%'
+        ];
+
+        // Delivery
+        $items[] = [
+            'id' => 'DELIVERY',
+            'price' => $deliveryFee,
+            'quantity' => 1,
+            'name' => 'Delivery Fee'
+        ];
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderCode,
+                'gross_amount' => $total,
+            ],
+            'customer_details' => [
+                'first_name' => $validated['name'],
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
-                'address' => $validated['address'],
-                'city' => $validated['city'],
-                'postal_code' => $validated['postal_code'],
-                'subtotal' => $subtotal,
-                'tax' => $tax,
-                'delivery_fee' => $deliveryFee,
-                'total' => $total,
-                'status' => 'pending',
-                'payment_method' => $validated['payment_method'],
-            ]);
+            ],
+            'item_details' => $items
+        ];
 
-            Log::info('Order created: ' . $order->id);
+        // SNAP TOKEN
+        $snapToken = $this->getSnapTokenDirect($params, $serverKey);
 
-            // SAVE ORDER ITEMS
-            foreach ($cartItems as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_name' => $item->name,
-                    'price' => (int) $item->price,
-                    'qty' => (int) $item->qty,
-                    'subtotal' => (int) ($item->price * $item->qty),
-                ]);
-            }
+        // CLEAR CART
+        Cart::where('user_id', Auth::id())->delete();
 
-            // COD FLOW
-            if ($validated['payment_method'] === 'cod') {
-                Log::info('COD payment selected');
-                Cart::where('user_id', Auth::id())->delete();
+        return response()->json([
+            'snapToken' => $snapToken,
+            'order_id' => $order->id
+        ]);
 
-                return response()->json([
-                    'cod' => true,
-                    'redirect' => route('orders.show', $order->id)
-                ]);
-            }
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Validation failed',
+            'errors' => $e->errors()
+        ], 422);
 
-            // ====================
-            // MIDTRANS FLOW - CUSTOM IMPLEMENTATION
-            // ====================
-            Log::info('=== MIDTRANS PAYMENT ===');
+    } catch (\Exception $e) {
+        Log::error('CHECKOUT ERROR: ' . $e->getMessage());
 
-            $serverKey = config('services.midtrans.server_key');
-
-            if (empty($serverKey)) {
-                throw new \Exception('Midtrans server key not configured');
-            }
-
-            // BUILD ITEMS
-            $items = [];
-            
-            $counter = 1;
-            foreach ($cartItems as $item) {
-                $itemPrice = (int) $item->price;
-                $itemQty = (int) $item->qty;
-                
-                $items[] = [
-                    'id' => 'ITEM' . $counter,
-                    'price' => $itemPrice,
-                    'quantity' => $itemQty,
-                    'name' => substr($item->name, 0, 50)
-                ];
-                
-                $counter++;
-            }
-
-            // Add tax
-            $items[] = [
-                'id' => 'TAX',
-                'price' => $tax,
-                'quantity' => 1,
-                'name' => 'Tax 11%'
-            ];
-
-            // Add delivery
-            $items[] = [
-                'id' => 'DELIVERY',
-                'price' => $deliveryFee,
-                'quantity' => 1,
-                'name' => 'Delivery Fee'
-            ];
-
-            // Midtrans params
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $orderCode,
-                    'gross_amount' => $total,
-                ],
-                'customer_details' => [
-                    'first_name' => $validated['name'],
-                    'email' => $validated['email'],
-                    'phone' => $validated['phone'],
-                ],
-                'item_details' => $items
-            ];
-
-            Log::info('Midtrans Params:', $params);
-
-            // Get Snap Token using custom function (bypasses library bug)
-            Log::info('Calling Midtrans API directly...');
-            
-            $snapToken = $this->getSnapTokenDirect($params, $serverKey);
-            
-            Log::info('✅ Snap token received: ' . $snapToken);
-
-            // Clear cart
-            Cart::where('user_id', Auth::id())->delete();
-            Log::info('Cart cleared');
-
-            return response()->json([
-                'snapToken' => $snapToken,
-                'order_id' => $order->id
-            ]);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validation Error:', $e->errors());
-            return response()->json([
-                'error' => true,
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
-            
-        } catch (\Exception $e) {
-            Log::error('=== CHECKOUT ERROR ===');
-            Log::error('Message: ' . $e->getMessage());
-            Log::error('File: ' . $e->getFile());
-            Log::error('Line: ' . $e->getLine());
-
-            return response()->json([
-                'error' => true,
-                'message' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'error' => true,
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     public function payment(Order $order)
     {
